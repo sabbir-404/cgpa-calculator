@@ -14,7 +14,7 @@ const Header = () => {
       <div className="header-content">
         <div className="logo">
           <GraduationCap size={28} />
-          <span>BD CGPA Calculator</span>
+          <span>CGPA Calculator</span>
         </div>
         <div className="header-actions">
           <motion.button

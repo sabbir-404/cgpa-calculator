@@ -245,6 +245,16 @@ body {
   margin-bottom: 1.5rem;
 }
 
+.section-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .input-row {
   display: grid;
   grid-template-columns: 1fr 100px 150px auto;
@@ -268,13 +278,41 @@ body {
   cursor: pointer;
 }
 
+/* Add Button Styles */
 .add-btn {
-  height: 46px;
-  width: 46px;
-  padding: 0;
+  height: 48px;
+  min-width: 48px;
+  padding: 0 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 0.4rem;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.add-btn .add-btn-text {
+  display: none;
+}
+
+.btn-add-disabled {
+  background: var(--bg-tertiary);
+  color: var(--text-muted);
+  border: 2px dashed var(--border-color);
+}
+
+.btn-add-ready {
+  background: var(--accent-primary);
+  color: white;
+  border: 2px solid var(--accent-primary);
+  box-shadow: 0 4px 15px rgba(249, 115, 22, 0.4);
+}
+
+.btn-add-ready:hover {
+  background: var(--accent-secondary);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(249, 115, 22, 0.5);
 }
 
 /* Courses List */
@@ -759,6 +797,46 @@ body {
   background: rgba(220, 38, 38, 0.1);
 }
 
+/* Detection States */
+.detected-info.success {
+  background: var(--accent-light);
+  border-color: var(--accent-primary);
+}
+
+.detected-info.success svg {
+  color: var(--accent-primary);
+}
+
+.detected-info.error {
+  background: rgba(220, 38, 38, 0.08);
+  border-color: var(--danger);
+}
+
+.detected-info.error svg {
+  color: var(--danger);
+}
+
+.detected-info.partial {
+  background: rgba(249, 115, 22, 0.08);
+  border-color: var(--accent-secondary);
+}
+
+.detected-info.partial svg {
+  color: var(--accent-secondary);
+}
+
+.confidence-badge {
+  display: inline-block;
+  margin-left: 0.5rem;
+  padding: 0.15rem 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+  background: var(--accent-primary);
+  color: white;
+  border-radius: 10px;
+  vertical-align: middle;
+}
+
 /* Divider */
 .divider {
   display: flex;
@@ -821,7 +899,16 @@ body {
 
   .add-btn {
     width: 100%;
-    height: 48px;
+    height: 52px;
+    gap: 0.5rem;
+  }
+
+  .add-btn .add-btn-text {
+    display: inline;
+  }
+
+  .btn-add-ready {
+    font-size: 1rem;
   }
 
   .btn {

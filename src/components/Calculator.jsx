@@ -61,32 +61,35 @@ const Calculator = () => {
       </div>
 
       <div className="calculator-content">
-        <TranscriptUpload
-          onUniversityDetected={handleUniversityDetected}
-          detectedUniversity={selectedUniversity}
-        />
+        {/* University Selection Section */}
+        <div className="university-selection">
+          <TranscriptUpload
+            onUniversityDetected={handleUniversityDetected}
+            detectedUniversity={selectedUniversity}
+          />
 
-        <div className="divider">or select manually</div>
+          <div className="divider">or select manually</div>
 
-        <div className="select-group">
-          <label>Select University</label>
-          <div className="select-wrapper">
-            <select
-              value={selectedUniversity}
-              onChange={(e) => {
-                setSelectedUniversity(e.target.value);
-                setCourses([]);
-                setGpa(null);
-              }}
-            >
-              <option value="">Choose your university</option>
-              {Object.entries(universities).map(([key, uni]) => (
-                <option key={key} value={key}>
-                  {uni.name}
-                </option>
-              ))}
-            </select>
-            <ChevronDown size={18} className="select-icon" />
+          <div className="select-group">
+            <label>Select University</label>
+            <div className="select-wrapper">
+              <select
+                value={selectedUniversity}
+                onChange={(e) => {
+                  setSelectedUniversity(e.target.value);
+                  setCourses([]);
+                  setGpa(null);
+                }}
+              >
+                <option value="">Choose your university</option>
+                {Object.entries(universities).map(([key, uni]) => (
+                  <option key={key} value={key}>
+                    {uni.name}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown size={18} className="select-icon" />
+            </div>
           </div>
         </div>
 
@@ -96,6 +99,7 @@ const Calculator = () => {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
+              className="grading-section"
             >
               <div className="grading-info">
                 <h4>Grading Scale - {universityData.shortName}</h4>

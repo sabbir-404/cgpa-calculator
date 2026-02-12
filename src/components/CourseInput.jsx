@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, X, BookOpen } from "lucide-react";
+import { Plus, X, BookOpen, Check } from "lucide-react";
 
 const CourseInput = ({ courses, setCourses, grades }) => {
   const [newCourse, setNewCourse] = useState({
@@ -9,8 +9,10 @@ const CourseInput = ({ courses, setCourses, grades }) => {
     grade: "",
   });
 
+  const canAdd = newCourse.name && newCourse.credit && newCourse.grade;
+
   const addCourse = () => {
-    if (newCourse.name && newCourse.credit && newCourse.grade) {
+    if (canAdd) {
       setCourses([...courses, { ...newCourse, id: Date.now() }]);
       setNewCourse({ name: "", credit: "", grade: "" });
     }
@@ -28,6 +30,7 @@ const CourseInput = ({ courses, setCourses, grades }) => {
 
   return (
     <div className="course-input-section">
+      <h4 className="section-title">Add Courses</h4>
       <div className="input-row">
         <div className="input-group">
           <label>Course Name</label>
@@ -67,13 +70,20 @@ const CourseInput = ({ courses, setCourses, grades }) => {
           </select>
         </div>
         <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="btn btn-primary add-btn"
+          whileHover={canAdd ? { scale: 1.08 } : {}}
+          whileTap={canAdd ? { scale: 0.95 } : {}}
+          animate={canAdd ? { 
+            boxShadow: ["0 0 0 0 rgba(249, 115, 22, 0)", "0 0 0 8px rgba(249, 115, 22, 0.3)", "0 0 0 0 rgba(249, 115, 22, 0)"]
+          } : {}}
+          transition={canAdd ? { 
+            boxShadow: { duration: 1.5, repeat: Infinity }
+          } : {}}
+          className={`btn add-btn ${canAdd ? "btn-add-ready" : "btn-add-disabled"}`}
           onClick={addCourse}
-          disabled={!newCourse.name || !newCourse.credit || !newCourse.grade}
+          disabled={!canAdd}
         >
-          <Plus size={18} />
+          {canAdd ? <Check size={20} /> : <Plus size={20} />}
+          <span className="add-btn-text">{canAdd ? "Add" : "Add"}</span>
         </motion.button>
       </div>
 
