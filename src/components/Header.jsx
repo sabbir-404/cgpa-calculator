@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
-import { Sun, Moon, GraduationCap, User } from "lucide-react";
+import { Sun, Moon, GraduationCap } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
 
-const Header = ({ onProfileClick, showProfile }) => {
+const Header = () => {
   const { isDark, toggleTheme } = useTheme();
 
   return (
@@ -17,15 +17,6 @@ const Header = ({ onProfileClick, showProfile }) => {
           <span>BD CGPA Calculator</span>
         </div>
         <div className="header-actions">
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={onProfileClick}
-            className={`icon-btn ${showProfile ? "active" : ""}`}
-            title="Profile"
-          >
-            <User size={20} />
-          </motion.button>
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}

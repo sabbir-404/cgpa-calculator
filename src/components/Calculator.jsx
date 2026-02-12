@@ -1,26 +1,23 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Calculator as CalcIcon, Save, RotateCcw, ChevronDown } from "lucide-react";
+import { Calculator as CalcIcon, RotateCcw, ChevronDown } from "lucide-react";
 import { universities, getGradePoint } from "../data/universities";
-import { useApp } from "../context/AppContext";
 import CourseInput from "./CourseInput";
+import TranscriptUpload from "./TranscriptUpload";
 
 const Calculator = () => {
-  const { activeProfile, addSemester, calculateSemesterGPA } = useApp();
-  const [selectedUniversity, setSelectedUniversity] = useState(
-    activeProfile?.university || ""
-  );
+  const [selectedUniversity, setSelectedUniversity] = useState("");
   const [courses, setCourses] = useState([]);
-  const [semesterName, setSemesterName] = useState("");
   const [gpa, setGpa] = useState(null);
-
-  useEffect(() => {
-    if (activeProfile?.university) {
-      setSelectedUniversity(activeProfile.university);
-    }
-  }, [activeProfile]);
+  const [totalCredits, setTotalCredits] = useState(0);
 
   const universityData = universities[selectedUniversity];
+
+  const handleUniversityDetected = (universityKey) => {
+    setSelectedUniversity(universityKey);
+    setCourses([]);
+    setGpa(null);
+  };
 
   const calculateGPA = () => {
     if (courses.length === 0) {
@@ -28,38 +25,27 @@ const Calculator = () => {
       return;
     }
 
-    let totalCredits = 0;
+    let credits = 0;
     let totalPoints = 0;
 
     courses.forEach((course) => {
       const credit = parseFloat(course.credit) || 0;
       const gradePoint = getGradePoint(selectedUniversity, course.grade);
       if (gradePoint !== null && credit > 0) {
-        totalCredits += credit;
+        credits += credit;
         totalPoints += credit * gradePoint;
       }
     });
 
-    const calculatedGpa = totalCredits > 0 ? totalPoints / totalCredits : 0;
+    const calculatedGpa = credits > 0 ? totalPoints / credits : 0;
     setGpa(calculatedGpa.toFixed(2));
-  };
-
-  const handleSaveSemester = () => {
-    if (!activeProfile || courses.length === 0 || !semesterName) return;
-    
-    addSemester({
-      name: semesterName,
-      courses: courses,
-      gpa: gpa,
-    });
-    
-    resetCalculator();
+    setTotalCredits(credits);
   };
 
   const resetCalculator = () => {
     setCourses([]);
-    setSemesterName("");
     setGpa(null);
+    setTotalCredits(0);
   };
 
   return (
@@ -75,6 +61,13 @@ const Calculator = () => {
       </div>
 
       <div className="calculator-content">
+        <TranscriptUpload
+          onUniversityDetected={handleUniversityDetected}
+          detectedUniversity={selectedUniversity}
+        />
+
+        <div className="divider">or select manually</div>
+
         <div className="select-group">
           <label>Select University</label>
           <div className="select-wrapper">
@@ -105,7 +98,7 @@ const Calculator = () => {
               exit={{ opacity: 0, height: 0 }}
             >
               <div className="grading-info">
-                <h4>Grading Scale</h4>
+                <h4>Grading Scale - {universityData.shortName}</h4>
                 <div className="grade-chips">
                   {universityData.grades.slice(0, 6).map((g) => (
                     <span key={g.letter} className="grade-chip">
@@ -119,18 +112,6 @@ const Calculator = () => {
                   )}
                 </div>
               </div>
-
-              {activeProfile && (
-                <div className="input-group semester-name">
-                  <label>Semester Name</label>
-                  <input
-                    type="text"
-                    placeholder="e.g., Fall 2024"
-                    value={semesterName}
-                    onChange={(e) => setSemesterName(e.target.value)}
-                  />
-                </div>
-              )}
 
               <CourseInput
                 courses={courses}
@@ -173,21 +154,11 @@ const Calculator = () => {
                     exit={{ opacity: 0, scale: 0.9 }}
                     className="result-card"
                   >
-                    <div className="result-label">Your GPA</div>
+                    <div className="result-label">Your Semester GPA</div>
                     <div className="result-value">{gpa}</div>
-                    <div className="result-scale">out of {universityData.scale}</div>
-                    
-                    {activeProfile && semesterName && (
-                      <motion.button
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        className="btn btn-save"
-                        onClick={handleSaveSemester}
-                      >
-                        <Save size={18} />
-                        Save to Profile
-                      </motion.button>
-                    )}
+                    <div className="result-scale">
+                      out of {universityData.scale} • {totalCredits} credits
+                    </div>
                   </motion.div>
                 )}
               </AnimatePresence>
